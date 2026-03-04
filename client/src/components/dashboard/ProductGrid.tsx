@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { type Product } from "@shared/schema";
 import { ArrowUpRight, ArrowDownRight, Search, Activity, Package } from "lucide-react";
 import { clsx } from "clsx";
+import { useState, useMemo } from "react";
 
 interface ProductGridProps {
   products: Product[];
@@ -9,6 +10,14 @@ interface ProductGridProps {
 }
 
 export function ProductGrid({ products, isLoading }: ProductGridProps) {
+  const [search, setSearch] = useState("");
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => 
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.category.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [products, search]);
   
   if (isLoading) {
     return (
@@ -53,8 +62,10 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Search matrix..." 
-              className="bg-black/40 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-primary/50 text-white font-body placeholder:text-muted-foreground w-64 transition-colors"
+              placeholder="Search market intelligence..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-black border border-white/10 rounded-sm pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-primary text-white font-body placeholder:text-muted-foreground w-80 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)]"
             />
           </div>
         </div>
@@ -63,16 +74,16 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/5 bg-black/20 text-xs uppercase tracking-wider text-muted-foreground font-body">
-              <th className="px-6 py-4 font-medium">Product / Entity</th>
-              <th className="px-6 py-4 font-medium">Category</th>
-              <th className="px-6 py-4 font-medium">Demand Score</th>
-              <th className="px-6 py-4 font-medium">Trend (7d)</th>
-              <th className="px-6 py-4 font-medium">Search Vol</th>
+            <tr className="border-b border-white/5 bg-black text-xs uppercase tracking-tighter text-muted-foreground font-body">
+              <th className="px-6 py-4 font-black">Product / Entity</th>
+              <th className="px-6 py-4 font-black">Category</th>
+              <th className="px-6 py-4 font-black">Demand Score</th>
+              <th className="px-6 py-4 font-black">Trend (7d)</th>
+              <th className="px-6 py-4 font-black">Search Vol</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {products.map((product, idx) => {
+            {filteredProducts.map((product, idx) => {
               const trendNum = Number(product.trendPercentage);
               const isPositive = trendNum >= 0;
               

@@ -9,74 +9,74 @@
     --font-display: 'Oxanium', sans-serif;
     --font-body: 'IBM Plex Mono', monospace;
 
-    /* Deep Cyber Dark Theme */
-    --background: 230 25% 5%;
-    --foreground: 210 40% 98%;
+    /* Luxury Gold & Obsidian Theme */
+    --background: 0 0% 0%; /* Pure Black */
+    --foreground: 0 0% 100%; /* Pure White */
     
-    --card: 230 25% 9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 5%; /* Deep Charcoal */
+    --card-foreground: 0 0% 100%;
     
-    --border: 230 25% 16%;
-    --border-highlight: 184 100% 40%;
+    --border: 0 0% 12%;
+    --border-highlight: 45 100% 50%; /* Gold */
     
-    --primary: 184 100% 50%; /* Neon Cyan */
-    --primary-foreground: 230 25% 5%;
+    --primary: 45 100% 50%; /* Gold */
+    --primary-foreground: 0 0% 0%;
     
-    --secondary: 284 100% 60%; /* Neon Purple */
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 20%; /* Grey */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 230 25% 15%;
-    --muted-foreground: 215 16% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 184 100% 50%;
-    --accent-foreground: 230 25% 5%;
+    --accent: 45 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
-    --success: 110 100% 54%;
-    --warning: 54 100% 50%;
-    --danger: 346 100% 50%;
+    --success: 142 70% 45%;
+    --warning: 45 100% 50%;
+    --danger: 0 84% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem; /* Sharper edges for luxury look */
   }
 
   body {
     @apply bg-background text-foreground antialiased min-h-screen selection:bg-primary/30 selection:text-primary;
     font-family: var(--font-body);
     background-color: hsl(var(--background));
-    /* Subtle noise/texture */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    /* Luxury subtle grain */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-white to-white/70;
+    @apply font-bold tracking-tighter text-white;
   }
 }
 
 @layer components {
   .cyber-grid {
-    background-size: 50px 50px;
+    background-size: 60px 60px;
     background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 100%);
+      linear-gradient(to right, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent);
   }
 
   .glass-panel {
-    @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl;
+    @apply bg-card/40 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
   }
 
   .glow-text {
-    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
   }
 
   .btn-cyber {
-    @apply relative overflow-hidden font-display uppercase tracking-widest text-sm font-bold transition-all duration-300;
+    @apply relative overflow-hidden font-display uppercase tracking-tighter text-sm font-black transition-all duration-500 border-none;
   }
 
   .btn-cyber::before {
     content: '';
-    @apply absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[45deg] transition-all duration-500;
+    @apply absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[30deg] transition-all duration-700;
   }
 
   .btn-cyber:hover::before {
