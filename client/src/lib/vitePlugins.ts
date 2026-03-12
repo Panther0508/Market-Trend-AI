@@ -14,15 +14,11 @@ import type { Plugin } from 'vite';
  * Equivalent to @replit/vite-plugin-dev-banner
  */
 export function marketTrendDevBanner(): Plugin {
-    let isDev = false;
-
     return {
         name: 'market-trend-dev-banner',
-        config(_, { mode }) {
-            isDev = mode === 'development';
-        },
         transformIndexHtml(html) {
-            if (!isDev) return html;
+            // Only apply in development mode
+            if (process.env.NODE_ENV === 'production') return html;
 
             const banner = `
         <div id="dev-banner" style="
@@ -83,15 +79,11 @@ export function marketTrendRouteDiscovery(): Plugin {
  * Equivalent to @replit/vite-plugin-runtime-error-modal
  */
 export function marketTrendErrorHandler(): Plugin {
-    let isDev = false;
-
     return {
         name: 'market-trend-error-handler',
-        config(_, { mode }) {
-            isDev = mode === 'development';
-        },
         transformIndexHtml(html) {
-            if (!isDev) return html;
+            // Only apply in development mode
+            if (process.env.NODE_ENV === 'production') return html;
 
             // Inject global error handler
             const errorHandler = `

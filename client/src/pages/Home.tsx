@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { Search } from "lucide-react";
 import {
     Cpu,
     TrendingUp,
@@ -82,9 +83,41 @@ export default function Home() {
                     </h1>
 
                     {/* Tagline */}
-                    <p className="text-xl sm:text-2xl text-muted-foreground font-body mb-10 max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-xl sm:text-2xl text-muted-foreground font-body mb-8 max-w-3xl mx-auto leading-relaxed">
                         Harness the power of artificial intelligence to discover, analyze, and predict market trends before they happen.
                     </p>
+
+                    {/* Search Bar */}
+                    <motion.form
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const formData = new FormData(e.currentTarget);
+                            const query = formData.get("query") as string;
+                            if (query.trim()) {
+                                window.location.href = `/search?q=${encodeURIComponent(query)}`;
+                            }
+                        }}
+                        className="max-w-xl mx-auto mb-10 w-full"
+                    >
+                        <div className="relative">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                            <input
+                                type="text"
+                                name="query"
+                                placeholder="Search products, trends, insights..."
+                                className="w-full pl-12 pr-32 py-4 bg-card/80 backdrop-blur border border-white/10 rounded-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+                            />
+                            <button
+                                type="submit"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-primary text-black font-display font-bold uppercase text-sm rounded-sm hover:bg-primary/90 transition-colors"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </motion.form>
 
                     {/* CTA Buttons */}
                     <motion.div
