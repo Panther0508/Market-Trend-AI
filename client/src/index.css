@@ -52,6 +52,33 @@
   }
 }
 
+/* Mobile-first responsive utilities */
+@layer utilities {
+  /* Touch-friendly tap targets */
+  .tap-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Horizontal scroll container for mobile */
+  .snap-x-container {
+    @apply overflow-x-auto snap-x snap-mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .snap-center {
+    @apply snap-center;
+  }
+}
+
 @layer components {
   .cyber-grid {
     background-size: 60px 60px;
@@ -71,7 +98,7 @@
   }
 
   .btn-cyber {
-    @apply relative overflow-hidden font-display uppercase tracking-tighter text-sm font-black transition-all duration-500 border-none;
+    @apply relative overflow-hidden font-display uppercase tracking-tighter text-sm font-black transition-all duration-500 border-none tap-target;
   }
 
   .btn-cyber::before {
@@ -83,12 +110,35 @@
     @apply left-[100%];
   }
   
+  .btn-cyber:active {
+    @apply scale-95;
+  }
+  
   .font-display {
     font-family: var(--font-display);
   }
   
   .font-body {
     font-family: var(--font-body);
+  }
+}
+
+/* Responsive breakpoints */
+@media (max-width: 640px) {
+  /* Mobile-specific styles */
+  .cyber-grid {
+    background-size: 40px 40px;
+  }
+  
+  .glass-panel {
+    @apply border-l border-r border-white/5;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet styles */
+  .cyber-grid {
+    background-size: 50px 50px;
   }
 }
 
