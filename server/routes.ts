@@ -2,18 +2,17 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   
+  // Health check endpoint for Render
+  app.get("/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   app.get(api.products.list.path, async (req, res) => {
     try {
       const products = await storage.getProducts();
@@ -43,42 +42,50 @@ export async function registerRoutes(
 
   app.post(api.insights.generate.path, async (req, res) => {
     try {
-      const prompt = `You are a live market analytics AI. Generate a realistic JSON list of 10 currently trending products globally. 
-Return ONLY a valid JSON object with a "products" array containing:
-{ "name": string, "category": string, "demandScore": number (0-100), "trendPercentage": string (e.g. "15.5", "-2.4"), "searchVolume": number }
-and an "insights" array containing 3 objects analyzing this data with:
-{ "title": string, "content": string, "type": string (must be 'trend', 'opportunity', or 'alert') }`;
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-5.2",
-        messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }
+      const allProducts = await storage.getProducts();
+      const marketData: Record<string, any> = {};
+      allProducts.forEach(p => {
+        marketData[p.name] = {
+          price: "N/A", // We could fetch actual prices here if needed
+          change: p.trendPercentage
+        };
       });
-      
-      const content = response.choices[0].message?.content;
-      if (!content) throw new Error("No content from AI");
-      
-      const parsed = JSON.parse(content);
-      
-      if (parsed.products && Array.isArray(parsed.products)) {
-        await storage.updateProducts(parsed.products.map((p: any) => ({
-          name: p.name,
-          category: p.category,
-          demandScore: Number(p.demandScore),
-          trendPercentage: String(p.trendPercentage),
-          searchVolume: Number(p.searchVolume)
-        })));
+
+      // Call Python backend for AI summary
+      const pythonUrl = process.env.PYTHON_BACKEND_URL || "http://localhost:5001";
+      const pythonResponse = await fetch(`${pythonUrl}/api/v1/ai/summary`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ market_data: marketData })
+      });
+
+      if (!pythonResponse.ok) {
+        throw new Error(`Python backend error: ${pythonResponse.statusText}`);
       }
+
+      const aiData = await pythonResponse.json();
+      if (!aiData.success) {
+        throw new Error(`AI generation failed: ${aiData.error || "Unknown error"}`);
+      }
+
+      const summary = aiData.data;
       
-      if (parsed.insights && Array.isArray(parsed.insights)) {
-        await storage.clearInsights();
-        for (const ins of parsed.insights) {
+      // Map AI key points to insights
+      await storage.clearInsights();
+      if (summary.key_points && Array.isArray(summary.key_points)) {
+        for (const point of summary.key_points) {
           await storage.addInsight({
-            title: ins.title,
-            content: ins.content,
-            type: ins.type
+            title: summary.title || "Market Update",
+            content: point,
+            type: summary.sentiment?.label === "negative" ? "alert" : "trend"
           });
         }
+      } else {
+        await storage.addInsight({
+          title: summary.title || "Market Summary",
+          content: summary.summary,
+          type: "trend"
+        });
       }
 
       res.json({ message: "Data refreshed successfully" });
