@@ -9,7 +9,7 @@
     "build:client": "vite build",
     "build:vercel": "npm run build:client && npm run build:server",
     "build:server": "tsx script/build.ts",
-    "start": "NODE_ENV=production node dist/index.cjs",
+    "start": "NODE_ENV=production node dist/index.js",
     "start:vercel": "vercel dev",
     "preview": "vite preview",
     "check": "tsc",
