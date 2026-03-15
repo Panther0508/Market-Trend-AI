@@ -2,6 +2,7 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
+import { registerCryptoRoutes } from "./api/crypto";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -97,6 +98,9 @@ export async function registerRoutes(
 
   // Seed data on startup
   seedDatabase().catch(console.error);
+
+  // Register crypto API routes
+  registerCryptoRoutes(app);
 
   return httpServer;
 }

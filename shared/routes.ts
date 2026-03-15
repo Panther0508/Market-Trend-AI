@@ -44,6 +44,110 @@ export const api = {
         })
       }
     }
+  },
+  crypto: {
+    search: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/search" as const,
+      responses: {
+        200: z.object({
+          coins: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            symbol: z.string(),
+            market_cap_rank: z.number().nullable(),
+            thumb: z.string(),
+            large: z.string(),
+          })),
+          trending: z.array(z.any()),
+          globalData: z.any(),
+          totalResults: z.number(),
+        })
+      }
+    },
+    top: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/top" as const,
+      responses: {
+        200: z.object({
+          coins: z.array(z.any()),
+          total: z.number(),
+          timestamp: z.string(),
+        })
+      }
+    },
+    detail: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/:coinId" as const,
+      responses: {
+        200: z.object({
+          id: z.string(),
+          symbol: z.string(),
+          name: z.string(),
+          description: z.string(),
+          image: z.string(),
+          currentPrice: z.number(),
+          marketCap: z.number(),
+          marketCapRank: z.number(),
+          priceChange24h: z.number(),
+          priceChangePercentage24h: z.number(),
+          priceChangePercentage7d: z.number(),
+          priceChangePercentage30d: z.number(),
+          ath: z.number(),
+          atl: z.number(),
+          volume24h: z.number(),
+          circulatingSupply: z.number(),
+          sparkline: z.array(z.number()),
+          links: z.object({
+            github: z.string().nullable(),
+            website: z.string().nullable(),
+          }),
+          genesisDate: z.string().nullable(),
+          coingeckoRank: z.number(),
+          coingeckoScore: z.number(),
+          developerScore: z.number(),
+          communityScore: z.number(),
+        })
+      }
+    },
+    history: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/:coinId/history" as const,
+      responses: {
+        200: z.object({
+          coinId: z.string(),
+          prices: z.array(z.object({ timestamp: z.number(), price: z.number() })),
+          marketCaps: z.array(z.object({ timestamp: z.number(), value: z.number() })),
+          volumes: z.array(z.object({ timestamp: z.number(), value: z.number() })),
+        })
+      }
+    },
+    global: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/global" as const,
+      responses: {
+        200: z.any()
+      }
+    },
+    trending: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/trending" as const,
+      responses: {
+        200: z.any()
+      }
+    },
+    links: {
+      method: "GET" as const,
+      path: "/api/v1/crypto/:coinId/links" as const,
+      responses: {
+        200: z.object({
+          github: z.string().nullable(),
+          website: z.string().nullable(),
+          documentation: z.string().nullable(),
+          whitepaper: z.string().nullable(),
+        })
+      }
+    }
   }
 };
 
