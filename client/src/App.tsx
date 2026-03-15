@@ -7,16 +7,19 @@ import NotFound from "@/pages/not-found";
 import { Dashboard } from "@/pages/Dashboard";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/search" component={SearchPage} />
-      {/* Fallback to 404 */}
-      <Route component={NotFound} />
-    </Switch>
+    <MainLayout>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/search" component={SearchPage} />
+        {/* Fallback to 404 */}
+        <Route component={NotFound} />
+      </Switch>
+    </MainLayout>
   );
 }
 

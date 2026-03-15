@@ -1,0 +1,49 @@
+# Render Blueprint Configuration
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Python AI Backend Service
+  - type: web
+    name: market-trend-ai-python
+    env: python
+    region: oregon
+    buildCommand: pip install -r python/requirements.txt
+    startCommand: cd python && python server.py
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_BACKEND_URL
+        sync: false
+      - key: COINGECKO_API_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+
+  # Main Node.js Web Service
+  - type: web
+    name: market-trend-ai
+    env: node
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NODE_VERSION
+        value: 20
+      - key: PYTHON_BACKEND_URL
+        # This will be auto-filled after deployment - format: https://market-trend-ai-python.onrender.com
+        sync: false
+
+databases:
+  - name: market_trend_ai_db
+    databaseName: market_trend_ai
+    user: market_trend_ai

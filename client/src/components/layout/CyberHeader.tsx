@@ -1,6 +1,6 @@
 import { Cpu, Activity, RefreshCw } from "lucide-react";
 import { useGenerateInsights } from "@/hooks/use-dashboard";
-import { SearchBar } from "@/components/SearchBar";
+import { SearchBar } from "./SearchBar";
 import { motion } from "framer-motion";
 import { clsx } from "clsx";
 

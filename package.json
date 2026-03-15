@@ -7,9 +7,19 @@
     "dev": "NODE_ENV=development tsx server/index.ts",
     "build": "tsx script/build.ts",
     "build:client": "vite build",
+    "build:vercel": "npm run build:client && npm run build:server",
+    "build:server": "tsx script/build.ts",
     "start": "NODE_ENV=production node dist/index.cjs",
+    "start:vercel": "vercel dev",
+    "preview": "vite preview",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "vercel:build": "vercel build --prod",
+    "vercel:deploy": "vercel --prod",
+    "vercel:link": "vercel link",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
