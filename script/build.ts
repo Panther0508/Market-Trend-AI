@@ -2,34 +2,37 @@ import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
 
-// server deps to bundle to reduce openat(2) syscalls
-// which helps cold start times
-const allowlist = [
-  "@google/generative-ai",
-  "axios",
-  "connect-pg-simple",
-  "cors",
-  "date-fns",
-  "drizzle-orm",
-  "drizzle-zod",
-  "express",
-  "express-rate-limit",
-  "express-session",
-  "jsonwebtoken",
-  "memorystore",
-  "multer",
-  "nanoid",
-  "nodemailer",
-  "openai",
-  "passport",
-  "passport-local",
-  "pg",
-  "stripe",
-  "uuid",
-  "ws",
-  "xlsx",
-  "zod",
-  "zod-validation-error",
+// Node.js built-in modules to externalize
+const nodeBuiltins = [
+  "node:events",
+  "node:path",
+  "node:url",
+  "node:fs",
+  "node:fs/promises",
+  "node:http",
+  "node:https",
+  "node:querystring",
+  "node:crypto",
+  "node:stream",
+  "node:util",
+  "node:os",
+  "node:buffer",
+  "node:net",
+  "node:tls",
+  "node:zlib",
+  "node:assert",
+  "node:console",
+  "node:process",
+  "node:child_process",
+  "node:cluster",
+  "node:dgram",
+  "node:dns",
+  "node:domain",
+  "node:module",
+  "node:readline",
+  "node:repl",
+  "node:sys",
+  "node:tty",
 ];
 
 async function buildAll() {
@@ -44,7 +47,7 @@ async function buildAll() {
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.devDependencies || {}),
   ];
-  const externals = allDeps.filter((dep) => !allowlist.includes(dep));
+  const externals = [...nodeBuiltins, ...allDeps];
 
   await esbuild({
     entryPoints: ["server/index.ts"],
@@ -55,7 +58,7 @@ async function buildAll() {
     define: {
       "process.env.NODE_ENV": '"production"',
     },
-    minify: true,
+    minify: false,
     external: externals,
     logLevel: "info",
   });
