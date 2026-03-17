@@ -1,6 +1,7 @@
 import { build as esbuild } from "esbuild";
-import { build as viteBuild } from "vite";
+import { build as viteBuild, normalizePath } from "vite";
 import { rm, readFile } from "fs/promises";
+import path from "path";
 
 // Node.js built-in modules to externalize
 const nodeBuiltins = [
@@ -39,7 +40,10 @@ async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
   console.log("building client...");
-  await viteBuild();
+  await viteBuild({
+    configFile: normalizePath(path.resolve("vite.config.ts")),
+    root: normalizePath(path.resolve("client")),
+  });
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));

@@ -12,10 +12,17 @@ export default defineConfig({
     },
   },
   root: "./client",
+  css: {
+    postcss: {
+      plugins: [
+        require("tailwindcss"),
+        require("autoprefixer"),
+      ],
+    },
+  },
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
-    cssCodeSplit: false,
   },
   server: {
     fs: {
