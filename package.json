@@ -5,10 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "tsx script/build.ts",
+    "build": "npx tsx script/build.ts",
     "build:client": "vite build",
     "build:vercel": "npm run build:client && npm run build:server",
-    "build:server": "tsx script/build.ts",
+    "build:server": "npx tsx script/build.ts",
     "start": "NODE_ENV=production node dist/index.js",
     "start:vercel": "vercel dev",
     "preview": "vite preview",

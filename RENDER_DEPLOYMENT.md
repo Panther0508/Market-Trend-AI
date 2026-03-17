@@ -35,7 +35,7 @@
    - Name: market-trend-ai
    - Environment: Node
    - Region: Oregon
-   - Build Command: npm install && npm run build
+   - Build Command: npm install && npx tsx script/build.ts
    - Start Command: npm run start
 
 5. Add Environment Variables:
