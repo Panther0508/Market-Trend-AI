@@ -29,7 +29,7 @@ services:
     name: market-trend-ai
     env: node
     region: oregon
-    buildCommand: npm install && npx tsx script/build.ts
+    buildCommand: npm ci && npm run build
     startCommand: npm run start
     healthCheckPath: /health
     envVars:

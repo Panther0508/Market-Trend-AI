@@ -44,9 +44,9 @@ async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
   console.log("building client...");
-  // Run vite build from client directory
-  execSync("npx vite build", {
-    cwd: path.resolve(__dirname, "..", "client"),
+  // Run vite build from root - the vite.config.ts in root points to client directory
+  execSync("node ./node_modules/vite/bin/vite.js build", {
+    cwd: path.resolve(__dirname, ".."),
     stdio: "inherit",
   });
 
