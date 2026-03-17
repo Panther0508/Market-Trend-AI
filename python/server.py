@@ -37,7 +37,7 @@ app = Flask(__name__)
 
 # Configure CORS
 config = get_config()
-CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:5000"])
+CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:5000", "https://market-trend-ai.onrender.com"])
 
 # Setup logging
 logger = setup_logging(config)

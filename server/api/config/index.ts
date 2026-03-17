@@ -73,7 +73,7 @@ export const config: ApiConfig = {
             maxRequests: parseInt(process.env.RATE_LIMIT_MAX || '100', 10),
         },
         cors: {
-            origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:5173'],
+            origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:5173', 'https://market-trend-ai.onrender.com'],
             credentials: true,
         },
     },

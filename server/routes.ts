@@ -54,7 +54,7 @@ export async function registerRoutes(
       });
 
       // Call Python backend for AI summary
-      const pythonUrl = process.env.PYTHON_BACKEND_URL || "http://localhost:5001";
+      const pythonUrl = process.env.PYTHON_BACKEND_URL || "https://market-trend-ai-python.onrender.com";
       const pythonResponse = await fetch(`${pythonUrl}/api/v1/ai/summary`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
