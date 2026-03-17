@@ -1,7 +1,11 @@
 import { build as esbuild } from "esbuild";
-import { build as viteBuild, normalizePath } from "vite";
 import { rm, readFile } from "fs/promises";
+import { execSync } from "child_process";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Node.js built-in modules to externalize
 const nodeBuiltins = [
@@ -40,9 +44,10 @@ async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
   console.log("building client...");
-  await viteBuild({
-    configFile: normalizePath(path.resolve("vite.config.ts")),
-    root: normalizePath(path.resolve("client")),
+  // Run vite build from client directory
+  execSync("npx vite build", {
+    cwd: path.resolve(__dirname, "..", "client"),
+    stdio: "inherit",
   });
 
   console.log("building server...");
