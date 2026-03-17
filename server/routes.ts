@@ -3,6 +3,7 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { registerCryptoRoutes } from "./api/crypto";
+import { registerNewsRoutes } from "./api/news";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -101,6 +102,9 @@ export async function registerRoutes(
 
   // Register crypto API routes
   registerCryptoRoutes(app);
+  
+  // Register news API routes
+  registerNewsRoutes(app);
 
   return httpServer;
 }

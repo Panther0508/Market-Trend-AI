@@ -1,6 +1,6 @@
 # Market Trend AI - Render Deployment Guide
 
-This document provides comprehensive instructions for deploying the Market Trend AI application with cryptocurrency search integration on Render.
+This document provides comprehensive instructions for deploying the Market Trend AI application with cryptocurrency news integration on Render.
 
 ## Table of Contents
 
@@ -8,8 +8,9 @@ This document provides comprehensive instructions for deploying the Market Trend
 2. [Environment Variables](#environment-variables)
 3. [Deployment Steps](#deployment-steps)
 4. [Crypto API Features](#crypto-api-features)
-5. [Troubleshooting](#troubleshooting)
-6. [Monitoring](#monitoring)
+5. [News API Features](#news-api-features)
+6. [Troubleshooting](#troubleshooting)
+7. [Monitoring](#monitoring)
 
 ---
 
@@ -18,6 +19,7 @@ This document provides comprehensive instructions for deploying the Market Trend
 - GitHub account with access to the repository
 - Render account (free tier works)
 - CoinGecko API key (optional, for higher rate limits)
+- Alpha Vantage API key (optional, for news)
 
 ---
 
@@ -48,17 +50,16 @@ openssl rand -base64 32
 | Variable                | Description                              | Where to Get                                                    |
 | ----------------------- | ---------------------------------------- | --------------------------------------------------------------- |
 | `COINGECKO_API_KEY`     | CoinGecko Pro API for higher rate limits | [coingecko.com](https://www.coingecko.com/en/api)               |
-| `ALPHA_VANTAGE_API_KEY` | Stock market data                        | [alphavantage.co](https://www.alphavantage.co/support/#api-key) |
+| `ALPHA_VANTAGE_API_KEY` | Stock market data & news                 | [alphavantage.co](https://www.alphavantage.co/support/#api-key) |
 | `HUGGINGFACE_API_KEY`   | AI/ML model access                       | [huggingface.co](https://huggingface.co/settings/tokens)        |
 | `OPENAI_API_KEY`        | OpenAI GPT models                        | [platform.openai.com](https://platform.openai.com/api-keys)     |
 
-### Crypto Search Specific Variables
+### Cache Settings
 
-| Variable            | Description                   | Default |
-| ------------------- | ----------------------------- | ------- |
-| `CACHE_TTL`         | Cache time-to-live in seconds | 300     |
-| `RATE_LIMIT_MAX`    | Max requests per window       | 100     |
-| `RATE_LIMIT_WINDOW` | Rate limit window in ms       | 60000   |
+| Variable    | Description                   | Default  |
+| ----------- | ----------------------------- | -------- |
+| `CACHE_TTL` | Cache time-to-live in seconds | 300      |
+| `CACHE_DIR` | Directory for cache files     | ./.cache |
 
 ---
 
@@ -134,14 +135,38 @@ render blueprint apply
 - **Long-term cache**: 5 minutes (coin details, trending)
 - Automatic cache invalidation based on data freshness
 
-### Open-Source Links
+---
 
-The crypto search includes links to:
+## News API Features
 
-- Project websites
-- GitHub repositories
-- Documentation
-- CoinGecko & CoinMarketCap pages
+### Implemented Endpoints
+
+| Endpoint                    | Description                      |
+| --------------------------- | -------------------------------- |
+| `/api/v1/news`              | Get cryptocurrency news          |
+| `/api/v1/news/trending`     | Get trending news                |
+| `/api/v1/news/search`       | Search news by topic             |
+| `/api/v1/news/coin/:coinId` | News for specific cryptocurrency |
+| `/api/v1/news/sources`      | Get available news sources       |
+| `/api/v1/news/cache/stats`  | Get cache statistics             |
+| `/api/v1/news/cache/clear`  | Clear news cache (admin)         |
+
+### Query Parameters
+
+| Parameter | Description                                        | Default |
+| --------- | -------------------------------------------------- | ------- |
+| `q`       | Search query                                       | -       |
+| `limit`   | Number of results (max 50)                         | 20      |
+| `sortBy`  | Sort by relevance/popularity/recency               | recency |
+| `sources` | Filter by sources (coingecko,coincap,alphavantage) | all     |
+
+### Features
+
+- **Multi-source Aggregation**: News from CoinGecko, CoinCap, and Alpha Vantage
+- **Sentiment Analysis**: Each article includes sentiment (positive/negative/neutral)
+- **Sorting & Filtering**: Sort by relevance, popularity, or recency
+- **Fallback Data**: Preloaded fallback news when APIs are unavailable
+- **Persistent Caching**: File-based cache persists across restarts
 
 ---
 
@@ -153,68 +178,16 @@ The crypto search includes links to:
 curl "https://your-app.onrender.com/api/v1/crypto/search?q=bitcoin"
 ```
 
-Response:
-
-```json
-{
-  "coins": [
-    {
-      "id": "bitcoin",
-      "name": "Bitcoin",
-      "symbol": "btc",
-      "market_cap_rank": 1,
-      "thumb": "https://assets.coingecko.com/...",
-      "large": "https://assets.coingecko.com/..."
-    }
-  ],
-  "trending": [...],
-  "globalData": {...},
-  "totalResults": 1
-}
-```
-
-### Get Coin Details
+### Get News
 
 ```bash
-curl "https://your-app.onrender.com/api/v1/crypto/bitcoin"
+curl "https://your-app.onrender.com/api/v1/news?sortBy=popularity"
 ```
 
-Response:
-
-```json
-{
-  "id": "bitcoin",
-  "symbol": "btc",
-  "name": "Bitcoin",
-  "currentPrice": 50000.0,
-  "marketCap": 1000000000000,
-  "marketCapRank": 1,
-  "priceChangePercentage24h": 2.5,
-  "links": {
-    "github": "https://github.com/bitcoin/bitcoin",
-    "website": "https://bitcoin.org"
-  }
-}
-```
-
-### Get Historical Data
+### Search News
 
 ```bash
-curl "https://your-app.onrender.com/api/v1/crypto/bitcoin/history?days=7"
-```
-
-Response:
-
-```json
-{
-  "coinId": "bitcoin",
-  "prices": [
-    { "timestamp": 1704067200000, "price": 45000 },
-    ...
-  ],
-  "marketCaps": [...],
-  "volumes": [...]
-}
+curl "https://your-app.onrender.com/api/v1/news/search?q=bitcoin&sortBy=relevance"
 ```
 
 ---
@@ -258,22 +231,17 @@ View logs in Render Dashboard:
 
 ### Cache Statistics
 
-Access cache stats at: `/api/v1/crypto/cache/stats`
+Access cache stats at:
 
-### API Testing
-
-Use the Search page in the UI:
-
-1. Navigate to `/search`
-2. Switch to "Cryptocurrency" tab
-3. Search for any coin to see results
+- Crypto: `/api/v1/crypto/cache/stats`
+- News: `/api/v1/news/cache/stats`
 
 ---
 
 ## Performance Tips
 
-1. **Use Caching**: The crypto API has built-in caching - don't disable it
-2. **Rate Limiting**: Respect CoinGecko limits to avoid IP blocking
+1. **Use Caching**: The API has built-in caching - don't disable it
+2. **Rate Limiting**: Respect API limits to avoid blocking
 3. **Database**: For production, use PostgreSQL instead of in-memory storage
 4. **Static Assets**: Configure CDN for static files in production
 
@@ -290,13 +258,3 @@ Use the Search page in the UI:
 
 **Total for hobby**: ~$0/month
 **Total for production**: ~$25+/month
-
----
-
-## Security Best Practices
-
-1. **Never commit secrets** - Use environment variables
-2. **Rotate secrets** - Change JWT_SECRET periodically
-3. **HTTPS only** - Render provides this by default
-4. **Rate limiting** - Already implemented in crypto API
-5. **Input validation** - Zod schemas validate all API inputs

@@ -148,6 +148,54 @@ export const api = {
         })
       }
     }
+  },
+  news: {
+    list: {
+      method: "GET" as const,
+      path: "/api/v1/news" as const,
+      responses: {
+        200: z.object({
+          articles: z.array(z.object({
+            id: z.string(),
+            title: z.string(),
+            description: z.string(),
+            url: z.string(),
+            source: z.string(),
+            publishedAt: z.string(),
+            imageUrl: z.string().optional(),
+            sentiment: z.enum(["positive", "negative", "neutral"]).optional(),
+            categories: z.array(z.string()),
+          })),
+          totalResults: z.number(),
+          source: z.string(),
+          cachedAt: z.string().optional(),
+          isFallback: z.boolean().optional(),
+        })
+      }
+    },
+    trending: {
+      method: "GET" as const,
+      path: "/api/v1/news/trending" as const,
+      responses: {
+        200: z.object({
+          articles: z.array(z.any()),
+          totalResults: z.number(),
+          source: z.string(),
+        })
+      }
+    },
+    search: {
+      method: "GET" as const,
+      path: "/api/v1/news/search" as const,
+      responses: {
+        200: z.object({
+          articles: z.array(z.any()),
+          totalResults: z.number(),
+          query: z.string(),
+          sortBy: z.string(),
+        })
+      }
+    }
   }
 };
 

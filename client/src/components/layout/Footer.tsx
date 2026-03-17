@@ -37,6 +37,20 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/search">
+                                    <span className="text-muted-foreground hover:text-primary cursor-pointer transition-colors text-sm font-body">
+                                        Search
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/news">
+                                    <span className="text-muted-foreground hover:text-primary cursor-pointer transition-colors text-sm font-body">
+                                        Crypto News
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
                                 <span className="text-muted-foreground hover:text-primary cursor-pointer transition-colors text-sm font-body">
                                     Documentation
                                 </span>
