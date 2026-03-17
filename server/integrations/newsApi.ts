@@ -3,6 +3,8 @@
  * Fetches news from CoinGecko, CoinCap, and Alpha Vantage
  */
 
+import fs from "fs";
+import path from "path";
 import config from "../api/config/index.js";
 
 // Types for news responses
@@ -112,7 +114,6 @@ function initPersistentCache(): void {
 function loadPersistentCache(): void {
   if (!persistentCachePath) return;
   try {
-    const fs = require('fs');
     if (fs.existsSync(persistentCachePath)) {
       const data = JSON.parse(fs.readFileSync(persistentCachePath, 'utf-8'));
       const now = Date.now();
@@ -133,8 +134,7 @@ function loadPersistentCache(): void {
 function savePersistentCache(): void {
   if (!persistentCachePath) return;
   try {
-    const fs = require('fs');
-    const cacheDir = require('path').dirname(persistentCachePath);
+    const cacheDir = path.dirname(persistentCachePath);
     if (!fs.existsSync(cacheDir)) {
       fs.mkdirSync(cacheDir, { recursive: true });
     }
