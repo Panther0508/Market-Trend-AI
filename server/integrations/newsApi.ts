@@ -98,6 +98,11 @@ let persistentCachePath: string | null = null;
 
 // Initialize persistent caching
 function initPersistentCache(): void {
+  // Disabled for now - can be re-enabled with proper ESM support
+  console.log('Persistent cache disabled');
+  return;
+  
+  /*
   if (config.environment === 'production') {
     try {
       const cacheDir = process.env.CACHE_DIR || './.cache';
@@ -108,6 +113,7 @@ function initPersistentCache(): void {
       console.warn('Persistent cache initialization failed:', e);
     }
   }
+  */
 }
 
 // Load cache from disk
