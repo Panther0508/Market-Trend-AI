@@ -8,7 +8,12 @@ This server integrates with the existing Market Trend AI frontend.
 """
 
 import os
+import sys
 import logging
+
+# Add the python directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from typing import Dict, Any, List, Optional
