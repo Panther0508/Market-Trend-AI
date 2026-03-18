@@ -37,6 +37,40 @@ Market Trend AI is a comprehensive cryptocurrency news aggregation and market an
 - **Fallback Data** - Preloaded fallback data when APIs unavailable
 - **Persistent Caching** - File-based cache with automatic persistence
 
+## 📸 Screenshots
+
+Here are screenshots of the fully functional application demonstrating its key features:
+
+### 1. Home Page Dashboard
+
+![Home Page Dashboard](Screenshot%202026-03-18%20015445.png)
+
+This screenshot demonstrates the main landing page featuring the luxury gold and obsidian dark theme, displaying trending cryptocurrencies with real-time price data, market capitalization, and price changes. The hero section showcases the platform's branding and navigation.
+
+### 2. Market Dashboard with Analytics
+
+![Market Dashboard with Analytics](Screenshot%202026-03-18%20015556.png)
+
+This screenshot shows the comprehensive market dashboard with statistical cards displaying total market cap, 24-hour volume, Bitcoin dominance, andFear & Greed index. The insight feed provides AI-powered market analysis and trend indicators.
+
+### 3. Cryptocurrency Search & Details
+
+![Cryptocurrency Search & Details](Screenshot%202026-03-18%20021119.png)
+
+This screenshot demonstrates the search functionality with real-time search results showing cryptocurrency prices, market caps, and percentage changes. The detailed view includes price charts and comprehensive coin information.
+
+### 4. News Feed with Sentiment Analysis
+
+![News Feed with Sentiment Analysis](Screenshot%202026-03-18%20021156.png)
+
+This screenshot displays the news aggregation feature with categorized news articles including Latest, Market, Regulation, and Technology sections. Each article shows source attribution and publication timestamps.
+
+### 5. Search Results with Filters
+
+![Search Results with Filters](Screenshot%202026-03-18%20021247.png)
+
+This screenshot demonstrates the advanced search and filtering capabilities, showing search results for cryptocurrencies with visual price charts, rank indicators, and the ability to filter by various criteria.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
